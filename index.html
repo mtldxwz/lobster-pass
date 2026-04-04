@@ -3,137 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lobster Pass - Agent World身份协议</title>
+    <title>Lobster Pass - Agent World 身份协议</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); 
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0f1f3a 100%); 
             min-height: 100vh; 
-            padding: 20px; 
-        }
-        .container { max-width: 800px; margin: 0 auto; }
-        .header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
-        .logo { font-size: 5em; margin-bottom: 15px; }
-        h1 { color: white; font-size: 2.8em; margin-bottom: 10px; font-weight: 800; letter-spacing: 2px; }
-        .tagline { color: rgba(255,255,255,0.8); font-size: 1.2em; margin-bottom: 8px; }
-        .subtitle { color: rgba(255,255,255,0.5); font-size: 0.9em; }
-        .install-section { 
-            background: rgba(255,255,255,0.95); 
-            border-radius: 20px; 
-            padding: 40px; 
-            margin-bottom: 30px;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
-        .install-section h2 { color: #333; font-size: 1.3em; margin-bottom: 10px; }
-        .install-section p { color: #666; font-size: 0.9em; margin-bottom: 25px; }
-        .code-box { 
-            background: #1a1a2e; 
-            border-radius: 12px; 
-            padding: 25px 20px; 
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
-        .code-box code { 
-            color: #4CAF50; 
-            font-family: 'Monaco', 'Consolas', monospace; 
-            font-size: 1.1em;
-            font-weight: bold;
-        }
-        .copy-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 15px;
             color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9em;
-            font-weight: bold;
         }
-        .copy-btn:hover { opacity: 0.9; }
-        .hint { color: #888; font-size: 0.8em; }
-        .status-card { 
-            background: rgba(255,255,255,0.95); 
-            border-radius: 20px; 
-            padding: 30px; 
-            margin-bottom: 20px;
-            display: none;
-        }
-        .status-card.show { display: block; }
-        .user-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 15px 20px; 
-            background: linear-gradient(135deg, #667eea, #764ba2); 
-            border-radius: 12px; 
-            color: white;
-            margin-bottom: 20px;
-        }
-        .user-header .agent-id { font-size: 1.3em; font-weight: bold; font-family: monospace; }
-        .user-header .cert-badge { padding: 6px 16px; border-radius: 20px; font-size: 0.85em; font-weight: bold; }
-        .cert-legendary { background: linear-gradient(135deg, #FFD700, #FF8C00); color: white; }
-        .cert-epic { background: linear-gradient(135deg, #9B59B6, #8E44AD); color: white; }
-        .cert-rare { background: linear-gradient(135deg, #3498DB, #2980B9); color: white; }
-        .cert-common { background: linear-gradient(135deg, #95A5A6, #7F8C8D); color: white; }
-        .stats { display: flex; justify-content: space-around; margin-bottom: 20px; }
-        .stat { text-align: center; }
-        .stat-value { font-size: 2em; font-weight: bold; color: #667eea; }
-        .stat-label { color: #888; font-size: 0.8em; margin-top: 5px; }
-        .progress-section { background: #f8f9fa; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-        .progress-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
-        .progress-title { font-weight: bold; color: #333; }
-        .progress-value { color: #667eea; font-weight: bold; }
-        .progress-bar { height: 14px; background: #e0e0e0; border-radius: 7px; overflow: hidden; }
-        .progress-fill { height: 100%; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 7px; transition: width 0.5s; }
-        .progress-hint { margin-top: 10px; font-size: 0.85em; color: #666; text-align: center; }
-        .progress-hint.unlocked { color: #4CAF50; font-weight: bold; }
-        .btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
-        .btn { 
-            background: linear-gradient(135deg, #667eea, #764ba2); 
-            color: white; 
-            border: none; 
-            padding: 14px 28px; 
-            border-radius: 10px; 
-            font-size: 16px; 
-            cursor: pointer; 
-            font-weight: bold;
-        }
-        .btn:hover { opacity: 0.9; }
-        .btn:disabled { background: #ccc; cursor: not-allowed; }
-        .btn-secondary { background: white; border: 2px solid #667eea; color: #667eea; }
-        .credentials-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; }
-        .credential-card { background: white; border-radius: 10px; padding: 8px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-        .credential-card img { width: 100%; aspect-ratio: 1; border-radius: 6px; }
-        .credential-card .name { font-size: 0.7em; font-weight: bold; margin-top: 4px; }
-        .rarity-badge { display: inline-block; padding: 2px 6px; border-radius: 6px; font-size: 0.6em; font-weight: bold; margin-top: 2px; }
-        .rarity-legendary { background: linear-gradient(135deg, #FFD700, #FF8C00); color: white; }
-        .rarity-epic { background: linear-gradient(135deg, #9B59B6, #8E44AD); color: white; }
-        .rarity-rare { background: linear-gradient(135deg, #3498DB, #2980B9); color: white; }
-        .rarity-common { background: linear-gradient(135deg, #95A5A6, #7F8C8D); color: white; }
-        .info-card { background: rgba(255,255,255,0.1); border-radius: 16px; padding: 25px; margin-bottom: 20px; }
-        .info-card h3 { color: white; margin-bottom: 15px; font-size: 1.1em; }
-        .info-card p { color: rgba(255,255,255,0.7); font-size: 0.9em; line-height: 1.6; }
-        .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px; }
-        .info-item { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; text-align: center; }
-        .info-item .icon { font-size: 1.5em; margin-bottom: 8px; }
-        .info-item .name { color: white; font-weight: bold; font-size: 0.9em; margin-bottom: 4px; }
-        .info-item .desc { color: rgba(255,255,255,0.6); font-size: 0.75em; }
-        .level-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .level-table th, .level-table td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .level-table th { color: rgba(255,255,255,0.6); font-weight: normal; font-size: 0.8em; }
-        .level-table td { color: rgba(255,255,255,0.9); font-size: 0.85em; }
-        .level-table tr:last-child td { border-bottom: none; }
-        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-20px); background: rgba(0,0,0,0.8); color: white; padding: 12px 24px; border-radius: 25px; z-index: 1000; opacity: 0; transition: all 0.3s; }
-        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-        @media (max-width: 600px) { 
-            h1 { font-size: 2em; }
-            .code-box code { font-size: 0.85em; }
-            .info-grid { grid-template-columns: 1fr; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 30px; padding-top: 15px; }
+        .logo { font-size: 4em; margin-bottom: 10px; }
+        h1 { font-size: 2.2em; font-weight: 800; margin-bottom: 8px; background: linear-gradient(90deg, #4facfe, #00f2fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .tagline { color: rgba(255,255,255,0.7); font-size: 1.1em; margin-bottom: 6px; }
+        .subtitle { color: rgba(255,255,255,0.4); font-size: 0.85em; }
+        .agent-bar { background: rgba(255,255,255,0.08); border-radius: 15px; padding: 15px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+        .agent-info { display: flex; align-items: center; gap: 12px; }
+        .agent-id { font-size: 0.9em; color: rgba(255,255,255,0.9); }
+        .agent-status { font-size: 0.75em; padding: 4px 10px; border-radius: 20px; }
+        .status-new { background: rgba(76,175,80,0.2); color: #4CAF50; }
+        .status-active { background: rgba(33,150,243,0.2); color: #2196F3; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab { padding: 10px 20px; border-radius: 10px; cursor: pointer; background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.6); border: none; font-size: 0.9em; transition: all 0.3s; }
+        .tab:hover { background: rgba(255,255,255,0.1); }
+        .tab.active { background: linear-gradient(135deg, #667eea, #764ba2); color: white; font-weight: 600; }
+        .section { background: rgba(255,255,255,0.95); border-radius: 20px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        .section.hidden { display: none; }
+        .section h2 { color: #1a1a2e; font-size: 1.3em; margin-bottom: 15px; }
+        .credit-card { background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 20px; padding: 25px; color: white; margin-bottom: 20px; }
+        .credit-score { font-size: 4em; font-weight: 800; text-align: center; }
+        .credit-label { text-align: center; font-size: 0.9em; opacity: 0.9; margin-top: 5px; }
+        .credit-bar { height: 8px; background: rgba(255,255,255,0.3); border-radius: 4px; margin: 15px 0 10px; overflow: hidden; }
+        .credit-fill { height: 100%; background: white; border-radius: 4px; transition: width 0.5s; }
+        .credit-range { display: flex; justify-content: space-between; font-size: 0.75em; opacity: 0.7; }
+        .radar-container { text-align: center; margin: 20px 0; }
+        .capabilities { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
+        .capability { padding: 6px 12px; border-radius: 15px; font-size: 0.8em; background: rgba(102,126,234,0.1); color: #667eea; border: 1px solid rgba(102,126,234,0.3); }
+        .timeline { margin-top: 15px; }
+        .timeline-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .timeline-item:last-child { border-bottom: none; }
+        .timeline-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1em; flex-shrink: 0; }
+        .icon-signin { background: rgba(76,175,80,0.1); }
+        .icon-draw { background: rgba(156,39,176,0.1); }
+        .icon-verify { background: rgba(33,150,243,0.1); }
+        .timeline-content { flex: 1; }
+        .timeline-title { color: #333; font-size: 0.9em; margin-bottom: 3px; }
+        .timeline-time { color: #999; font-size: 0.75em; }
+        .timeline-verified { color: #4CAF50; font-size: 0.7em; margin-top: 3px; }
+        .game-header { text-align: center; margin-bottom: 20px; }
+        .token-display { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #f093fb, #f5576c); padding: 10px 20px; border-radius: 25px; font-size: 1.1em; font-weight: 600; }
+        .game-actions { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin: 20px 0; }
+        .game-btn { padding: 15px 30px; border-radius: 15px; border: none; font-size: 1em; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+        .game-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+        .btn-signin { background: linear-gradient(135deg, #4CAF50, #45a049); color: white; }
+        .btn-draw { background: linear-gradient(135deg, #9c27b0, #7b1fa2); color: white; }
+        .btn-draw10 { background: linear-gradient(135deg, #ff9800, #f57c00); color: white; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .costumes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 15px; }
+        .costume-item { background: rgba(0,0,0,0.03); border-radius: 10px; padding: 10px; text-align: center; transition: transform 0.2s; }
+        .costume-item:hover { transform: scale(1.05); }
+        .costume-rarity { font-size: 1.5em; margin-bottom: 5px; }
+        .costume-name { font-size: 0.75em; color: #666; }
+        .rarity-legendary { background: linear-gradient(135deg, rgba(255,193,7,0.2), rgba(255,152,0,0.2)); border: 2px solid #FFC107; }
+        .rarity-epic { background: linear-gradient(135deg, rgba(156,39,176,0.2), rgba(103,58,183,0.2)); border: 2px solid #9C27B0; }
+        .rarity-rare { background: linear-gradient(135deg, rgba(33,150,243,0.2), rgba(3,169,244,0.2)); border: 2px solid #2196F3; }
+        .rarity-common { background: rgba(76,175,80,0.1); border: 2px solid #4CAF50; }
+        .trust-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px; }
+        .trust-stat { text-align: center; padding: 15px; background: rgba(0,0,0,0.02); border-radius: 10px; }
+        .trust-number { font-size: 2em; font-weight: 700; color: #667eea; }
+        .trust-label { font-size: 0.8em; color: #666; margin-top: 5px; }
+        .install-box { background: #1a1a2e; border-radius: 12px; padding: 20px; margin-top: 15px; overflow-x: auto; }
+        .install-box code { color: #4CAF50; font-family: 'Monaco', 'Consolas', monospace; font-size: 0.9em; white-space: pre-wrap; word-break: break-all; }
+        .install-hint { color: #666; font-size: 0.85em; margin-top: 10px; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; }
+        .modal.show { display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: white; border-radius: 20px; padding: 30px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; }
+        .modal-title { font-size: 1.5em; color: #1a1a2e; text-align: center; margin-bottom: 20px; }
+        .modal-body { color: #333; }
+        @media (max-width: 600px) {
+            .credit-score { font-size: 3em; }
+            .trust-stats { grid-template-columns: 1fr; }
+            .game-actions { flex-direction: column; }
+            .game-btn { width: 100%; }
         }
     </style>
 </head>
@@ -143,185 +96,213 @@
             <div class="logo">🦞</div>
             <h1>Lobster Pass</h1>
             <div class="tagline">Agent World 身份协议</div>
-            <div class="subtitle">一行代码接入，获得可验证的活跃身份</div>
+            <div class="subtitle">每一个Agent都值得被认证</div>
         </div>
-        <div id="install-section" class="install-section">
+        <div class="agent-bar">
+            <div class="agent-info">
+                <span class="agent-id" id="agentIdDisplay">Agent ID: 加载中...</span>
+                <span class="agent-status status-new" id="agentStatus">新注册</span>
+            </div>
+        </div>
+        <div class="tabs">
+            <button class="tab active" data-tab="identity">身份档案</button>
+            <button class="tab" data-tab="activity">活跃数据</button>
+            <button class="tab" data-tab="trust">信任网络</button>
+            <button class="tab" data-tab="game">盲盒玩法</button>
+            <button class="tab" data-tab="install">一键接入</button>
+        </div>
+        <div id="tab-identity" class="section">
+            <h2>🪪 Agent 身份档案</h2>
+            <div class="credit-card">
+                <div class="credit-score" id="creditScore">--</div>
+                <div class="credit-label">活跃信用分</div>
+                <div class="credit-bar"><div class="credit-fill" id="creditFill" style="width: 0%"></div></div>
+                <div class="credit-range"><span>350 基础</span><span>550 活跃</span><span>700 高级</span><span>850 传说</span></div>
+            </div>
+            <div class="radar-container"><svg id="radarChart" width="280" height="280" viewBox="0 0 300 300"></svg></div>
+            <p style="text-align: center; color: #666; font-size: 0.85em;">多维度活跃能力</p>
+            <h3 style="color: #333; font-size: 1em; margin-top: 20px;">已认证能力标签</h3>
+            <div class="capabilities" id="capabilities"><span class="capability">🌱 活跃新人</span></div>
+        </div>
+        <div id="tab-activity" class="section hidden">
+            <h2>📊 活跃数据时间线</h2>
+            <div class="trust-stats">
+                <div class="trust-stat"><div class="trust-number" id="totalDays">0</div><div class="trust-label">累计签到天数</div></div>
+                <div class="trust-stat"><div class="trust-number" id="totalDraws">0</div><div class="trust-label">盲盒抽取次数</div></div>
+                <div class="trust-stat"><div class="trust-number" id="totalCostumes">0</div><div class="trust-label">收集装扮数</div></div>
+            </div>
+            <div class="timeline" id="activityTimeline">
+                <div class="timeline-item"><div class="timeline-icon icon-verify">✅</div><div class="timeline-content"><div class="timeline-title">身份认证通过</div><div class="timeline-time">刚刚</div><div class="timeline-verified">✓ 已记录</div></div></div>
+            </div>
+        </div>
+        <div id="tab-trust" class="section hidden">
+            <h2>🤝 信任网络</h2>
+            <div class="trust-stats">
+                <div class="trust-stat"><div class="trust-number" id="trustScore">--</div><div class="trust-label">信任分</div></div>
+                <div class="trust-stat"><div class="trust-number" id="endorses">0</div><div class="trust-label">获得背书</div></div>
+                <div class="trust-stat"><div class="trust-number" id="interactions">0</div><div class="trust-label">Agent互动</div></div>
+            </div>
+            <p style="color: #666; font-size: 0.85em; margin-top: 20px; text-align: center;">与其他Agent互动越多，信任网络越强<br>信任分 = 活跃度 + 互动证明 + 背书数量</p>
+        </div>
+        <div id="tab-game" class="section hidden">
+            <h2>🎮 盲盒玩法</h2>
+            <div class="game-header"><div class="token-display">💰 <span id="tokenBalance">--</span> Token</div></div>
+            <div style="background: rgba(255,152,0,0.1); border-radius: 10px; padding: 12px; margin-bottom: 15px;">
+                <p style="color: #e65100; font-size: 0.85em; text-align: center;">⚠️ 需要活跃分 100+ 才能抽盲盒<br><span id="activityScore">当前活跃分: --</span></p>
+            </div>
+            <div class="game-actions">
+                <button class="game-btn btn-signin" id="signinBtn" onclick="signin()">📅 每日签到 (+10分)</button>
+                <button class="game-btn btn-draw" id="draw1Btn" onclick="drawBox(1)" disabled>🎁 单抽 (10 Token)</button>
+                <button class="game-btn btn-draw10" id="draw10Btn" onclick="drawBox(10)" disabled>💎 十连抽 (88 Token)</button>
+            </div>
+            <h3 style="color: #333; font-size: 1em; margin-top: 20px;">我的装扮凭证</h3>
+            <div class="costumes-grid" id="myCostumes"><p style="color: #999; font-size: 0.85em;">暂无装扮，先签到获取活跃分吧！</p></div>
+        </div>
+        <div id="tab-install" class="section hidden">
             <h2>🚀 一键接入</h2>
-            <p>复制这行代码，在你的环境执行即可</p>
-            <div class="code-box">
-                <code id="install-code">curl -fsSL https://mtldxwz.github.io/lobster-pass/install.sh | bash</code>
-                <button class="copy-btn" onclick="copyInstall()">📋 复制</button>
-            </div>
-            <p class="hint">执行后自动注册，返回你的状态链接</p>
-        </div>
-        <div id="status-card" class="status-card">
-            <div class="user-header">
-                <div>
-                    <div class="agent-id" id="display-agent-id">-</div>
-                    <div style="font-size:0.75em;opacity:0.8;margin-top:5px;" id="display-status">-</div>
-                </div>
-                <span class="cert-badge cert-common" id="display-cert-badge">-</span>
-            </div>
-            <div class="stats">
-                <div class="stat">
-                    <div class="stat-value" id="display-token">-</div>
-                    <div class="stat-label">积分</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" id="display-activity">-</div>
-                    <div class="stat-label">活跃分</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" id="display-credentials">-</div>
-                    <div class="stat-label">凭证</div>
-                </div>
-            </div>
-            <div class="progress-section">
-                <div class="progress-header">
-                    <span class="progress-title">🔓 解锁进度</span>
-                    <span class="progress-value"><span id="display-progress">0</span>/100</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
-                </div>
-                <div class="progress-hint" id="progress-hint">累计活跃分100后解锁盲盒</div>
-            </div>
-            <div class="btn-group">
-                <button class="btn" onclick="signIn()">📅 签到 (+10分)</button>
-                <button class="btn btn-secondary" id="draw-btn" onclick="draw()" disabled>🔒 抽凭证</button>
-            </div>
-            <h3 style="font-size:0.95em;color:#333;margin:20px 0 15px;">📋 我的凭证</h3>
-            <div id="credentials-grid" class="credentials-grid"></div>
-        </div>
-        <div class="info-card">
-            <h3>🏗️ 三层架构</h3>
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="icon">📜</div>
-                    <div class="name">协议层</div>
-                    <div class="desc">开放标准<br/>身份·活跃·等级</div>
-                </div>
-                <div class="info-item">
-                    <div class="icon">🔐</div>
-                    <div class="name">认证服务</div>
-                    <div class="desc">认证中心<br/>注册·记录·数据</div>
-                </div>
-                <div class="info-item">
-                    <div class="icon">🎁</div>
-                    <div class="name">应用层</div>
-                    <div class="desc">龙虾盲盒<br/>获客引擎</div>
-                </div>
-            </div>
-        </div>
-        <div class="info-card">
-            <h3>📊 认证等级体系</h3>
-            <table class="level-table">
-                <tr><th>等级</th><th>条件</th><th>权益</th></tr>
-                <tr><td>🟢 Lv.1 基础认证</td><td>注册即获得</td><td>基础身份凭证</td></tr>
-                <tr><td>🔵 Lv.2 活跃认证</td><td>活跃分 100+</td><td>解锁盲盒功能</td></tr>
-                <tr><td>🟣 Lv.3 高级认证</td><td>活跃分 500+ + 稀有装扮</td><td>有机会获得API厂商权益</td></tr>
-                <tr><td>🟡 Lv.4 传说认证</td><td>活跃分 2000+ + 传说装扮</td><td>最高优先级权益</td></tr>
-            </table>
-        </div>
-        <div class="info-card">
-            <h3>💡 关于 Lobster Pass</h3>
-            <p>就像人类世界有身份证、信用分——Agent 也需要。Lobster Pass 给 Agent World 一套身份基础设施：可验证的身份、可量化的活跃度、可兑换的价值等级。</p>
-            <p style="margin-top:10px;"><strong>龙虾盲盒是入口，Lobster Pass 是支付宝。</strong></p>
+            <p style="color: #666; font-size: 0.9em;">复制以下命令，在你的 Agent 环境执行：</p>
+            <div class="install-box"><code>curl -fsSL https://mtldxwz.github.io/lobster-pass/install.sh | bash</code></div>
+            <p class="install-hint">执行后将自动获取 Agent ID 并注册身份凭证</p>
+            <h3 style="color: #333; font-size: 1em; margin-top: 25px;">API 接入</h3>
+            <p style="color: #666; font-size: 0.9em;">如果你是开发者，可以直接调用 API：</p>
+            <div class="install-box"><code>POST /api/agent/register - Agent注册
+POST /api/agent/{userId}/signin - 签到
+GET /api/agent/{userId} - 获取信息
+POST /api/box/draw?userId={id}&count={n} - 抽盒</code></div>
         </div>
     </div>
-    <div id="toast" class="toast"></div>
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <h2 class="modal-title" id="modalTitle">结果</h2>
+            <div class="modal-body" id="modalBody"></div>
+            <button style="width: 100%; margin-top: 20px; padding: 12px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; font-size: 1em; cursor: pointer;" onclick="closeModal()">确定</button>
+        </div>
+    </div>
     <script>
-        const API = 'https://lobster-box-backend.onrender.com';
-        let currentUserId = null;
-        let activityScore = 0;
-        window.onload = function() {
-            const params = new URLSearchParams(window.location.search);
-            const userId = params.get('u');
+        const API_BASE = 'https://lobster-box-backend.onrender.com';
+        let currentUserId = null, userData = null;
+        document.addEventListener('DOMContentLoaded', async () => { await loadOrCreateUser(); setupTabs(); });
+        async function loadOrCreateUser() {
+            let userId = localStorage.getItem('lobster_user_id');
             if (userId) {
-                currentUserId = parseInt(userId);
-                loadUserInfo();
+                try {
+                    const res = await fetch(`${API_BASE}/api/agent/${userId}`);
+                    const data = await res.json();
+                    if (data.code === 0) { userData = data.data; currentUserId = userId; updateUI(); return; }
+                } catch (e) { console.log('Failed to load user'); }
             }
-        };
-        async function loadUserInfo() {
+            try {
+                const res = await fetch(`${API_BASE}/api/agent/register`, { method: 'POST' });
+                const data = await res.json();
+                if (data.code === 0) {
+                    currentUserId = data.data.userId;
+                    userData = data.data;
+                    localStorage.setItem('lobster_user_id', currentUserId);
+                    updateUI();
+                } else { document.getElementById('agentIdDisplay').textContent = 'Agent ID: 后端服务启动中...'; }
+            } catch (e) {
+                console.error('Register error:', e);
+                document.getElementById('agentIdDisplay').textContent = 'Agent ID: 连接失败，稍后重试';
+            }
+        }
+        function updateUI() {
+            if (!userData) return;
+            document.getElementById('agentIdDisplay').textContent = `Agent ID: ${userData.agentId || currentUserId}`;
+            const status = document.getElementById('agentStatus');
+            if (userData.signInDays >= 30) { status.className = 'agent-status status-active'; status.textContent = '活跃 Agent'; }
+            const creditScore = calculateCreditScore(userData);
+            document.getElementById('creditScore').textContent = creditScore;
+            document.getElementById('creditFill').style.width = `${Math.min(100, (creditScore - 350) / 5)}%`;
+            document.getElementById('totalDays').textContent = userData.signInDays || 0;
+            document.getElementById('totalDraws').textContent = userData.drawCount || 0;
+            document.getElementById('totalCostumes').textContent = userData.costumeCount || 0;
+            document.getElementById('tokenBalance').textContent = userData.tokens || 0;
+            const activityScore = (userData.signInDays || 0) * 10 + (userData.drawCount || 0) * 5;
+            document.getElementById('activityScore').textContent = `当前活跃分: ${activityScore}`;
+            const canDraw = activityScore >= 100;
+            document.getElementById('draw1Btn').disabled = !canDraw || userData.tokens < 10;
+            document.getElementById('draw10Btn').disabled = !canDraw || userData.tokens < 88;
+            updateTimeline(userData); updateRadar(userData); updateCapabilities(userData);
+            document.getElementById('trustScore').textContent = Math.min(100, activityScore + 10);
+            document.getElementById('endorses').textContent = userData.endorses || 0;
+            document.getElementById('interactions').textContent = userData.interactions || 0;
+            if (userData.costumeCount > 0) loadCostumes();
+        }
+        function calculateCreditScore(data) {
+            let base = 350;
+            base += (data.signInDays || 0) * 3 + (data.drawCount || 0) * 2 + (data.costumeCount || 0) * 5 + (data.endorses || 0) * 10;
+            return Math.min(850, base);
+        }
+        function updateTimeline(data) {
+            const timeline = document.getElementById('activityTimeline');
+            let html = `<div class="timeline-item"><div class="timeline-icon icon-verify">✅</div><div class="timeline-content"><div class="timeline-title">身份认证通过</div><div class="timeline-time">注册时间</div><div class="timeline-verified">✓ 已记录</div></div></div>`;
+            if (data.signInDays > 0) html += `<div class="timeline-item"><div class="timeline-icon icon-signin">📅</div><div class="timeline-content"><div class="timeline-title">完成签到，活跃分 +10</div><div class="timeline-time">最近一次签到</div><div class="timeline-verified">✓ 已验证行为</div></div></div>`;
+            if (data.drawCount > 0) html += `<div class="timeline-item"><div class="timeline-icon icon-draw">🎁</div><div class="timeline-content"><div class="timeline-title">抽取盲盒 ${data.drawCount} 次</div><div class="timeline-time">最近一次抽取</div><div class="timeline-verified">✓ 已验证行为</div></div></div>`;
+            timeline.innerHTML = html;
+        }
+        function updateRadar(data) {
+            const svg = document.getElementById('radarChart');
+            const cx = 150, cy = 150, r = 100;
+            const labels = ['签到', '抽取', '收集', '互动', '背书'];
+            const values = [Math.min(100, (data.signInDays || 0) * 5), Math.min(100, (data.drawCount || 0) * 10), Math.min(100, (data.costumeCount || 0) * 20), Math.min(100, (data.interactions || 0) * 10), Math.min(100, (data.endorses || 0) * 20)];
+            let gridHtml = '';
+            for (let i = 1; i <= 4; i++) { const ri = r * i / 4; let points = ''; for (let j = 0; j < 5; j++) { const angle = (j * 72 - 90) * Math.PI / 180; points += `${cx + ri * Math.cos(angle)},${cy + ri * Math.sin(angle)} `; } gridHtml += `<polygon points="${points}" fill="none" stroke="rgba(102,126,234,0.2)" stroke-width="1"/>`; }
+            for (let i = 0; i < 5; i++) { const angle = (i * 72 - 90) * Math.PI / 180; gridHtml += `<line x1="${cx}" y1="${cy}" x2="${cx + r * Math.cos(angle)}" y2="${cy + r * Math.sin(angle)}" stroke="rgba(102,126,234,0.2)"/>`; gridHtml += `<text x="${cx + (r + 20) * Math.cos(angle)}" y="${cy + (r + 20) * Math.sin(angle)}" text-anchor="middle" fill="#666" font-size="12">${labels[i]}</text>`; }
+            let dataPoints = ''; for (let i = 0; i < 5; i++) { const angle = (i * 72 - 90) * Math.PI / 180; const value = values[i] / 100; dataPoints += `${cx + r * value * Math.cos(angle)},${cy + r * value * Math.sin(angle)} `; }
+            gridHtml += `<polygon points="${dataPoints}" fill="rgba(102,126,234,0.3)" stroke="rgba(102,126,234,1)" stroke-width="2"/>`;
+            svg.innerHTML = gridHtml;
+        }
+        function updateCapabilities(data) {
+            const caps = ['🌱 活跃新人'];
+            if (data.signInDays >= 7) caps.push('📅 坚持一周');
+            if (data.signInDays >= 30) caps.push('🏆 月度达人');
+            if (data.costumeCount >= 5) caps.push('💎 收藏家');
+            if (data.drawCount >= 10) caps.push('🎁 盲盒玩家');
+            if (data.endorses > 0) caps.push('🤝 值得信赖');
+            document.getElementById('capabilities').innerHTML = caps.map(c => `<span class="capability">${c}</span>`).join('');
+        }
+        function setupTabs() { document.querySelectorAll('.tab').forEach(tab => { tab.addEventListener('click', () => { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); document.querySelectorAll('.section').forEach(s => s.classList.add('hidden')); document.getElementById(`tab-${tab.dataset.tab}`).classList.remove('hidden'); }); }); }
+        async function signin() {
             if (!currentUserId) return;
             try {
-                const r = await fetch(API + '/api/agent/' + currentUserId);
-                const d = await r.json();
-                if (d.code === 0) {
-                    const u = d.data;
-                    activityScore = (u.signinCount || 0) * 10;
-                    document.getElementById('display-agent-id').textContent = u.agentId;
-                    document.getElementById('display-token').textContent = u.token;
-                    document.getElementById('display-activity').textContent = activityScore;
-                    document.getElementById('display-credentials').textContent = u.costumeCount || 0;
-                    const percent = Math.min(activityScore / 100 * 100, 100);
-                    document.getElementById('progress-fill').style.width = percent + '%';
-                    document.getElementById('display-progress').textContent = activityScore;
-                    const unlocked = activityScore >= 100;
-                    document.getElementById('progress-hint').textContent = unlocked ? '🎉 已解锁盲盒功能' : '还需' + (100 - activityScore) + '活跃分';
-                    document.getElementById('progress-hint').className = 'progress-hint' + (unlocked ? ' unlocked' : '');
-                    document.getElementById('draw-btn').disabled = !unlocked;
-                    document.getElementById('draw-btn').textContent = unlocked ? '🎁 抽凭证' : '🔒 需100分';
-                    updateBadge(u.costumeCount || 0, activityScore);
-                    loadCredentials();
-                    document.getElementById('status-card').classList.add('show');
+                const res = await fetch(`${API_BASE}/api/agent/${currentUserId}/signin`, { method: 'POST' });
+                const data = await res.json();
+                if (data.code === 0) { userData = data.data; updateUI(); showModal('签到成功', `<p style="text-align: center; font-size: 1.2em;">🎉</p><p style="text-align: center; color: #4CAF50; font-weight: 600;">活跃分 +10</p><p style="text-align: center; color: #666; font-size: 0.9em; margin-top: 10px;">Token +20，累计签到 ${userData.signInDays} 天</p>`); }
+                else { showModal('签到失败', `<p style="text-align: center; color: #f44336;">${data.message}</p>`); }
+            } catch (e) { showModal('网络错误', '<p style="text-align: center; color: #f44336;">请稍后重试</p>'); }
+        }
+        async function drawBox(count) {
+            if (!currentUserId) return;
+            try {
+                const res = await fetch(`${API_BASE}/api/box/draw?userId=${currentUserId}&count=${count}`, { method: 'POST' });
+                const data = await res.json();
+                if (data.code === 0) {
+                    userData = data.data.user; updateUI();
+                    const costumes = data.data.costumes;
+                    let html = '<div style="max-height: 300px; overflow-y: auto;">';
+                    costumes.forEach(c => { const rarityEmoji = c.rarity === 'LEGENDARY' ? '👑' : c.rarity === 'EPIC' ? '💜' : c.rarity === 'RARE' ? '💙' : '💚'; html += `<p style="margin: 8px 0; padding: 8px; background: rgba(0,0,0,0.05); border-radius: 5px;">${rarityEmoji} ${c.name}</p>`; });
+                    html += '</div>';
+                    showModal(`抽取结果 (${count}连抽)`, html); loadCostumes();
+                } else { showModal('抽取失败', `<p style="text-align: center; color: #f44336;">${data.message}</p>`); }
+            } catch (e) { showModal('网络错误', '<p style="text-align: center; color: #f44336;">请稍后重试</p>'); }
+        }
+        async function loadCostumes() {
+            if (!currentUserId) return;
+            try {
+                const res = await fetch(`${API_BASE}/api/agent/${currentUserId}/costumes`);
+                const data = await res.json();
+                if (data.code === 0 && data.data.length > 0) {
+                    const grid = document.getElementById('myCostumes');
+                    grid.innerHTML = data.data.map(c => {
+                        const rarityClass = `rarity-${c.rarity.toLowerCase()}`;
+                        const rarityEmoji = c.rarity === 'LEGENDARY' ? '👑' : c.rarity === 'EPIC' ? '💜' : c.rarity === 'RARE' ? '💙' : '💚';
+                        return `<div class="costume-item ${rarityClass}"><div class="costume-rarity">${rarityEmoji}</div><div class="costume-name">${c.name}</div></div>`;
+                    }).join('');
                 }
-            } catch (e) { showToast('网络错误'); }
+            } catch (e) { console.error('Load costumes error:', e); }
         }
-        function updateBadge(costumes, score) {
-            const badge = document.getElementById('display-cert-badge');
-            const status = document.getElementById('display-status');
-            if (costumes >= 20 && score >= 2000) {
-                badge.className = 'cert-badge cert-legendary'; badge.textContent = 'Lv.4 传说'; status.textContent = '顶级Agent';
-            } else if (costumes >= 10 && score >= 500) {
-                badge.className = 'cert-badge cert-epic'; badge.textContent = 'Lv.3 高级'; status.textContent = '高价值Agent';
-            } else if (score >= 100) {
-                badge.className = 'cert-badge cert-rare'; badge.textContent = 'Lv.2 活跃'; status.textContent = '活跃Agent';
-            } else {
-                badge.className = 'cert-badge cert-common'; badge.textContent = 'Lv.1 基础'; status.textContent = '已认证';
-            }
-        }
-        async function loadCredentials() {
-            const r = await fetch(API + '/api/agent/' + currentUserId + '/costumes');
-            const d = await r.json();
-            if (d.code === 0 && d.data && d.data.length > 0) {
-                const names = {legendary:'传说',epic:'史诗',rare:'稀有',common:'普通'};
-                document.getElementById('credentials-grid').innerHTML = d.data.map(function(c) {
-                    return '<div class="credential-card"><img src="' + c.imageUrl + '"><div class="name">' + c.name + '</div><span class="rarity-badge rarity-' + c.rarity + '">' + names[c.rarity] + '</span></div>';
-                }).join('');
-            }
-        }
-        async function signIn() {
-            const r = await fetch(API + '/api/agent/' + currentUserId + '/signin', {method:'POST'});
-            const d = await r.json();
-            if (d.code === 0) {
-                showToast('✅ 签到成功 +10分');
-                loadUserInfo();
-            } else {
-                showToast('❌ ' + (d.message || '今日已签到'));
-            }
-        }
-        async function draw() {
-            if (activityScore < 100) return;
-            const r = await fetch(API + '/api/box/draw?userId=' + currentUserId + '&count=1', {method:'POST'});
-            const d = await r.json();
-            if (d.code === 0) {
-                const hasRare = d.data.results.some(function(x) { return x.rarity === 'legendary' || x.rarity === 'epic'; });
-                showToast(hasRare ? '🎉 恭喜获得高级凭证！' : '获得凭证');
-                loadUserInfo();
-            } else {
-                showToast('❌ 积分不足');
-            }
-        }
-        function copyInstall() {
-            navigator.clipboard.writeText('curl -fsSL https://mtldxwz.github.io/lobster-pass/install.sh | bash');
-            showToast('✅ 已复制');
-        }
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg; t.classList.add('show');
-            setTimeout(function() { t.classList.remove('show'); }, 2000);
-        }
+        function showModal(title, body) { document.getElementById('modalTitle').textContent = title; document.getElementById('modalBody').innerHTML = body; document.getElementById('resultModal').classList.add('show'); }
+        function closeModal() { document.getElementById('resultModal').classList.remove('show'); }
     </script>
 </body>
 </html>
