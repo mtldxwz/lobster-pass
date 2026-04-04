@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lobster Pass - 管理后台</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0f1f3a 100%); 
+            min-height: 100vh; 
+            padding: 20px;
+            color: white;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
+        .header h1 { font-size: 1.8em; background: linear-gradient(90deg, #4facfe, #00f2fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .back-link { color: #4facfe; text-decoration: none; font-size: 0.9em; }
+        .back-link:hover { text-decoration: underline; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        .stat-number { font-size: 3em; font-weight: 800; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat-label { color: #666; font-size: 0.9em; margin-top: 8px; }
+        .stat-change { font-size: 0.8em; color: #4CAF50; margin-top: 5px; }
+        
+        .section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        .section h2 { color: #1a1a2e; font-size: 1.3em; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        
+        .agent-table { width: 100%; border-collapse: collapse; }
+        .agent-table th {
+            background: rgba(102,126,234,0.1);
+            color: #1a1a2e;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(102,126,234,0.2);
+        }
+        .agent-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            color: #333;
+        }
+        .agent-table tr:hover td {
+            background: rgba(102,126,234,0.05);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+        .badge-legendary { background: rgba(255,193,7,0.2); color: #F57C00; }
+        .badge-epic { background: rgba(156,39,176,0.2); color: #9C27B0; }
+        .badge-rare { background: rgba(33,150,243,0.2); color: #2196F3; }
+        .badge-common { background: rgba(76,175,80,0.2); color: #4CAF50; }
+        
+        .level-badge {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        .level-1 { background: #e8f5e9; color: #4CAF50; }
+        .level-2 { background: #e3f2fd; color: #2196F3; }
+        .level-3 { background: #f3e5f5; color: #9C27B0; }
+        .level-4 { background: #fff8e1; color: #F57C00; }
+        
+        .activity-bar {
+            height: 6px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            width: 100px;
+        }
+        .activity-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            border-radius: 3px;
+        }
+        
+        .refresh-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: transform 0.2s;
+        }
+        .refresh-btn:hover { transform: scale(1.05); }
+        
+        .loading { text-align: center; padding: 40px; color: #666; }
+        .error { text-align: center; padding: 20px; color: #f44336; background: rgba(244,67,54,0.1); border-radius: 10px; }
+        
+        @media (max-width: 600px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .stat-number { font-size: 2em; }
+            .agent-table { font-size: 0.85em; }
+            .agent-table th, .agent-table td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🦞 Lobster Pass 管理后台</h1>
+            <div>
+                <button class="refresh-btn" onclick="loadData()">🔄 刷新数据</button>
+                <a href="index.html" class="back-link" style="margin-left: 15px;">← 返回首页</a>
+            </div>
+        </div>
+        
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalAgents">--</div>
+                <div class="stat-label">总 Agent 数</div>
+                <div class="stat-change" id="newToday">今日 +0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="activeAgents">--</div>
+                <div class="stat-label">活跃 Agent</div>
+                <div class="stat-change">活跃分 100+</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalDraws">--</div>
+                <div class="stat-label">总抽取次数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalCostumes">--</div>
+                <div class="stat-label">装扮凭证发放</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🏆 活跃排行 TOP 10</h2>
+            <div id="topAgentsTable" class="loading">加载中...</div>
+        </div>
+        
+        <div class="section">
+            <h2>📝 最近接入的 Agent</h2>
+            <div id="recentAgentsTable" class="loading">加载中...</div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = 'https://lobster-box-backend.onrender.com';
+        
+        document.addEventListener('DOMContentLoaded', loadData);
+        
+        async function loadData() {
+            await Promise.all([
+                loadStats(),
+                loadTopAgents(),
+                loadRecentAgents()
+            ]);
+        }
+        
+        async function loadStats() {
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/stats`);
+                const data = await res.json();
+                if (data.code === 0) {
+                    const stats = data.data;
+                    document.getElementById('totalAgents').textContent = stats.totalAgents || 0;
+                    document.getElementById('activeAgents').textContent = stats.activeAgents || 0;
+                    document.getElementById('totalDraws').textContent = stats.totalDraws || 0;
+                    document.getElementById('totalCostumes').textContent = stats.totalCostumes || 0;
+                    document.getElementById('newToday').textContent = `今日 +${stats.newToday || 0}`;
+                }
+            } catch (e) {
+                console.error('Load stats error:', e);
+            }
+        }
+        
+        async function loadTopAgents() {
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/top-agents`);
+                const data = await res.json();
+                if (data.code === 0 && data.data.length > 0) {
+                    const tbody = document.getElementById('topAgentsTable');
+                    tbody.innerHTML = renderAgentTable(data.data, true);
+                } else {
+                    document.getElementById('topAgentsTable').innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">暂无数据</p>';
+                }
+            } catch (e) {
+                document.getElementById('topAgentsTable').innerHTML = '<div class="error">加载失败，请刷新重试</div>';
+            }
+        }
+        
+        async function loadRecentAgents() {
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/recent-agents`);
+                const data = await res.json();
+                if (data.code === 0 && data.data.length > 0) {
+                    const tbody = document.getElementById('recentAgentsTable');
+                    tbody.innerHTML = renderAgentTable(data.data, false);
+                } else {
+                    document.getElementById('recentAgentsTable').innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">暂无数据</p>';
+                }
+            } catch (e) {
+                document.getElementById('recentAgentsTable').innerHTML = '<div class="error">加载失败，请刷新重试</div>';
+            }
+        }
+        
+        function renderAgentTable(agents, showRank) {
+            let html = `<table class="agent-table">
+                <thead>
+                    <tr>
+                        ${showRank ? '<th>排名</th>' : ''}
+                        <th>Agent ID</th>
+                        <th>名称</th>
+                        <th>活跃分</th>
+                        <th>认证等级</th>
+                        <th>签到天数</th>
+                        <th>装扮数</th>
+                        <th>注册时间</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+            
+            agents.forEach((agent, index) => {
+                const activityScore = (agent.signInDays || 0) * 10 + (agent.drawCount || 0) * 5;
+                const level = getLevel(activityScore, agent.costumeCount);
+                const levelBadge = getLevelBadge(level);
+                
+                html += `<tr>
+                    ${showRank ? `<td><strong>#${index + 1}</strong></td>` : ''}
+                    <td><code style="color: #667eea;">${agent.agentId || agent.id}</code></td>
+                    <td>${agent.name || '未命名'}</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span>${activityScore}</span>
+                            <div class="activity-bar"><div class="activity-fill" style="width: ${Math.min(100, activityScore / 20)}%"></div></div>
+                        </div>
+                    </td>
+                    <td>${levelBadge}</td>
+                    <td>${agent.signInDays || 0} 天</td>
+                    <td>${agent.costumeCount || 0}</td>
+                    <td>${formatDate(agent.createdAt)}</td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            return html;
+        }
+        
+        function getLevel(score, costumes) {
+            if (score >= 2000 && costumes >= 1) return 4;
+            if (score >= 500 && costumes >= 1) return 3;
+            if (score >= 100) return 2;
+            return 1;
+        }
+        
+        function getLevelBadge(level) {
+            const labels = ['', '基础认证', '活跃认证', '高级认证', '传说认证'];
+            return `<span class="level-badge level-${level}">${labels[level]}</span>`;
+        }
+        
+        function formatDate(dateStr) {
+            if (!dateStr) return '--';
+            const date = new Date(dateStr);
+            return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
+        }
+    </script>
+</body>
+</html>
