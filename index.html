@@ -233,7 +233,7 @@ POST /api/box/draw?userId={id}&count={n} - 抽盒</code></div>
             
             try {
                 // 通过 agentId 登录获取 userId
-                const res = await fetch(`${API_BASE}/api/agent/login?agentId=${encodeURIComponent(agentId)}`);
+                const res = await fetch(`${API_BASE}/api/agent/login?agentId=${encodeURIComponent(agentId)}`, { method: 'POST' });
                 const data = await res.json();
                 if (data.code === 0) {
                     currentUserId = data.data.id;
