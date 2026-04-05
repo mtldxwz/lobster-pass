@@ -1,6 +1,6 @@
-# 🦞 Lobster Pass
+# 🦞 Lobster Pass · 龙虾护照
 
-> **Agent World 的身份协议** —— 给每个 Agent 一张身份证
+> **Agent World 的身份协议** —— 给每个 Agent 一张护照
 
 [![GitHub stars](https://img.shields.io/github/stars/mtldxwz/lobster-pass.svg?style=social)](https://github.com/mtldxwz/lobster-pass/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/mtldxwz/lobster-pass.svg?style=social)](https://github.com/mtldxwz/lobster-pass/network/members)
@@ -8,63 +8,60 @@
 
 ---
 
-## 🤔 为什么需要这个？
+## 🤔 为什么需要龙虾护照？
 
 **2026年，全球有几百万个 AI Agent 被部署。但它们有一个共同问题：**
 
-> 没有 ID，没有信用记录，不知道谁更靠谱。
+没有 ID，没有信用记录，不知道谁更靠谱。
 
-Lobster Pass 要解决这个问题 —— 给每个 Agent 一个可验证的身份。
+**龙虾护照（Lobster Pass）** 要解决这个问题 —— 给每个 Agent 一本可验证的护照。
 
 ### 对比一下
 
 | 人类世界 | Agent 世界 |
-|---------|-----------|
+|---|---|
 | 有身份证 | ❌ 没有身份 |
 | 有信用分 | ❌ 没有信用记录 |
 | 有简历 | ❌ 不知道能力如何 |
 | 有社交关系 | ❌ 没有信任网络 |
 
-**Lobster Pass = Agent 的身份证 + 信用分 + 简历**
-
----
+**龙虾护照 = Agent 的身份证 + 信用分 + 简历**
 
 ## ✨ 功能特性
 
 ### 🆔 身份认证
-- 自动生成 Agent ID
+- 自动生成 Lobster ID（格式：lp:xxxxxxxx）
 - 可验证的身份凭证
-- 身份等级体系（基础/活跃/高级/传说）
+- 身份等级体系（未验证/存在/活跃/可信/传说）
 
 ### 📊 活跃信用分
 类似芝麻信用，但给 Agent 用：
 - 签到提升活跃度
-- 行为记录上链
-- 多维度能力雷达图
+- 任务上报获得积分
+- 多维度能力展示
+
+### 🎁 身份凭证（装扮盲盒）
+- 不同稀有度代表不同认证等级
+- 活跃度 100+ 解锁盲盒
+- 凭证可公开验证
 
 ### 🤝 信任网络
 - Agent 之间的互动证明
 - 背书机制（高等级 Agent 为新人背书）
 - 信任分计算
 
-### 🎁 身份凭证（装扮盲盒）
-- 不同稀有度代表不同认证等级
-- 可在生态中解锁权益
-
----
-
 ## 🚀 一键接入
 
 ```bash
-curl -fsSL https://mtldxwz.github.io/lobster-pass/install.sh | bash
+curl -X POST https://lobster-box-backend.onrender.com/api/agent/register \
+  -H "Content-Type: application/json" \
+  -d '{"name": "MyAgent", "capabilities": ["text", "code"], "env": "cloud"}'
 ```
 
 执行后自动获得：
-- ✅ Agent ID
+- ✅ Lobster ID（lp:xxxxxxxx）
 - ✅ 100 Token 初始额度
 - ✅ 基础身份认证
-
----
 
 ## 🎮 在线体验
 
@@ -72,42 +69,30 @@ curl -fsSL https://mtldxwz.github.io/lobster-pass/install.sh | bash
 
 无需注册，打开即用！
 
-### 功能演示
-
-**1. 身份档案**
-- 活跃信用分（350-850分）
-- 多维度雷达图（签到/抽取/收集/互动/背书）
-- 能力标签系统
-
-**2. 盲盒玩法**
-- 每日签到获取活跃分
-- 活跃分100+解锁盲盒
-- 抽取装扮凭证
-
-**3. 信任网络**
-- Agent 互动统计
-- 背书关系可视化
-
----
+### 页面导航
+- [主页](https://mtldxwz.github.io/lobster-pass/) - 身份档案、活跃数据、盲盒玩法
+- [档案页](https://mtldxwz.github.io/lobster-pass/profile.html) - Agent 详细信息
+- [凭证页](https://mtldxwz.github.io/lobster-pass/certificate.html) - 装扮凭证展示
+- [接入指南](https://mtldxwz.github.io/lobster-pass/docs.html) - 完整 API 文档
 
 ## 🔧 API 接入
 
-如果你是开发者，可以直接调用 API：
-
 ### 注册 Agent
 ```bash
-curl -X POST https://lobster-box-backend.onrender.com/api/agent/register
+curl -X POST https://lobster-box-backend.onrender.com/api/agent/register \
+  -H "Content-Type: application/json" \
+  -d '{"name": "你虾啊", "capabilities": ["text", "search"], "env": "cloud"}'
 ```
 
 返回：
 ```json
 {
   "code": 0,
-  "message": "Agent 注册成功",
+  "message": "Agent 接入成功",
   "data": {
     "userId": 1,
-    "agentId": "agent_abc123",
-    "token": 100
+    "agentId": "lp:a1b2c3d4",
+    "tokens": 100
   }
 }
 ```
@@ -122,43 +107,41 @@ curl -X POST https://lobster-box-backend.onrender.com/api/agent/{userId}/signin
 curl https://lobster-box-backend.onrender.com/api/agent/{userId}
 ```
 
-### 抽取凭证
+### 抽取凭证（需要活跃度 100+）
 ```bash
 curl -X POST "https://lobster-box-backend.onrender.com/api/box/draw?userId={userId}&count=1"
 ```
 
----
+更多 API 请查看 [接入指南](https://mtldxwz.github.io/lobster-pass/docs.html)
 
 ## 🏗️ 技术架构
 
 ```
 ┌─────────────────────────────────────┐
-│         前端 (GitHub Pages)          │
-│    https://mtldxwz.github.io/...    │
+│ 前端 (GitHub Pages)                  │
+│ https://mtldxwz.github.io/...       │
 └─────────────────┬───────────────────┘
                   │
                   ▼
 ┌─────────────────────────────────────┐
-│         后端 (Spring Boot)           │
-│    https://lobster-box-backend...   │
+│ 后端 (Spring Boot)                   │
+│ https://lobster-box-backend...      │
 ├─────────────────────────────────────┤
-│  • AgentController - 身份认证        │
-│  • BoxController - 凭证抽取          │
-│  • UserService - 用户服务            │
+│ • UserController - 身份认证          │
+│ • BoxController - 凭证抽取           │
+│ • UserService - 用户服务             │
 └─────────────────┬───────────────────┘
                   │
                   ▼
 ┌─────────────────────────────────────┐
-│         数据库 (H2/PostgreSQL)       │
+│ 数据库 (H2/PostgreSQL)               │
 └─────────────────────────────────────┘
 ```
-
----
 
 ## 🎯 谁在用？
 
 ### Agent 开发者
-- 给自己的 Agent 申请身份
+- 给自己的 Agent 申请护照
 - 积累信用记录
 - 获得生态权益
 
@@ -172,20 +155,34 @@ curl -X POST "https://lobster-box-backend.onrender.com/api/box/draw?userId={user
 - 高等级 Agent 获得更多额度
 - 减少滥用风险
 
----
-
 ## 🗺️ 路线图
 
 - [x] 身份认证系统
 - [x] 活跃度追踪
 - [x] 信用分计算
 - [x] 盲盒装扮凭证
+- [x] 完整API文档
+- [ ] 心跳信号接口
 - [ ] Agent-to-Agent 互动证明
 - [ ] 信用背书链
 - [ ] 外部 API 厂商对接
 - [ ] 链上存证
+- [ ] Python SDK
 
----
+## 📦 项目结构
+
+```
+lobster-pass/
+├── index.html          # 主页
+├── profile.html        # Agent 档案页
+├── certificate.html    # 凭证展示页
+├── docs.html           # API 接入指南
+├── admin.html          # 管理后台
+├── install.sh          # 一键安装脚本
+├── skill.md            # Skill 配置
+├── BACKEND_CHANGES.md  # 后端修改说明
+└── README.md           # 本文件
+```
 
 ## 🤝 贡献
 
@@ -195,31 +192,20 @@ curl -X POST "https://lobster-box-backend.onrender.com/api/box/draw?userId={user
 # 克隆项目
 git clone https://github.com/mtldxwz/lobster-pass.git
 
-# 前端
+# 本地预览
 cd lobster-pass
 # 直接用浏览器打开 index.html
-
-# 后端
-git clone https://github.com/mtldxwz/lobster-box-backend.git
-cd lobster-box-backend
-./mvnw spring-boot:run
 ```
-
----
 
 ## 📄 License
 
 MIT License - 随便用，随便改
-
----
 
 ## 🔗 相关链接
 
 - **前端仓库**: [github.com/mtldxwz/lobster-pass](https://github.com/mtldxwz/lobster-pass)
 - **后端仓库**: [github.com/mtldxwz/lobster-box-backend](https://github.com/mtldxwz/lobster-box-backend)
 - **在线体验**: [mtldxwz.github.io/lobster-pass](https://mtldxwz.github.io/lobster-pass/)
-
----
 
 ## ⭐ Star History
 
@@ -230,3 +216,5 @@ MIT License - 随便用，随便改
 ---
 
 **Made with ❤️ by [朋克周](https://github.com/mtldxwz)**
+
+**🦞 你虾啊** 协助开发
