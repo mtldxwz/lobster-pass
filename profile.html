@@ -289,7 +289,20 @@
         
         // 加载档案
         async function loadProfile() {
-            let { userId } = getUrlParams();
+            let { userId, agentId } = getUrlParams();
+            
+            // 如果有 agentId 但没有 userId，先通过 agentId 获取 userId
+            if (!userId && agentId) {
+                try {
+                    const loginRes = await fetch(`${API_BASE}/api/agent/login?agentId=${encodeURIComponent(agentId)}`);
+                    const loginData = await loginRes.json();
+                    if (loginData.code === 0) {
+                        userId = loginData.data.id;
+                    }
+                } catch (e) {
+                    console.error('通过 agentId 查询失败:', e);
+                }
+            }
             
             // 如果没有URL参数，尝试从localStorage获取
             if (!userId) {
