@@ -371,11 +371,11 @@ POST /api/box/draw?userId={id}&count={n} - 抽盒</code></div>
                 if (data.code === 0) {
                     userData = data.data.user;
                     updateUI();
-                    const costumes = data.data.costumes;
+                    const costumes = data.data.results;
                     let html = '<div style="max-height: 300px; overflow-y: auto;">';
                     costumes.forEach(c => {
                         const rarityEmoji = c.rarity === 'LEGENDARY' ? '👑' : c.rarity === 'EPIC' ? '💜' : c.rarity === 'RARE' ? '💙' : '💚';
-                        html += `<p style="margin: 8px 0; padding: 8px; background: rgba(0,0,0,0.05); border-radius: 5px;">${rarityEmoji} ${c.costumeName}</p>`;
+                        html += `<div style="margin: 10px 0; padding: 12px; background: rgba(0,0,0,0.05); border-radius: 10px; text-align: center;"><img src="${c.costumeImage}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;"><br>${rarityEmoji} ${c.costumeName}</div>`;
                     });
                     html += '</div>';
                     showModal(`抽取结果 (${count}连抽)`, html);
