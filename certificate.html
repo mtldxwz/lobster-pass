@@ -1,0 +1,155 @@
+# 创建所有新文件
+cat > certificate.html << 'EOF'
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>凭证证书 - Lobster Pass</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0f1f3a 100%); 
+            min-height: 100vh; 
+            padding: 20px;
+            color: white;
+        }
+        .container { max-width: 600px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { font-size: 3em; margin-bottom: 10px; }
+        h1 { font-size: 1.8em; font-weight: 700; margin-bottom: 8px; background: linear-gradient(90deg, #4facfe, #00f2fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .certificate-card {
+            background: linear-gradient(135deg, rgba(102,126,234,0.15), rgba(118,75,162,0.15));
+            border: 2px solid rgba(102,126,234,0.3);
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .certificate-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .rarity-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .rarity-legendary { background: linear-gradient(135deg, #FFC107, #FF9800); color: #1a1a2e; }
+        .rarity-epic { background: linear-gradient(135deg, #9C27B0, #673AB7); color: white; }
+        .rarity-rare { background: linear-gradient(135deg, #2196F3, #03A9F4); color: white; }
+        .rarity-common { background: linear-gradient(135deg, #4CAF50, #45a049); color: white; }
+        
+        .costume-icon { font-size: 6em; margin: 20px 0; position: relative; z-index: 1; }
+        .costume-name { font-size: 1.5em; font-weight: 700; margin-bottom: 10px; position: relative; z-index: 1; }
+        .costume-desc { color: rgba(255,255,255,0.7); font-size: 0.95em; margin-bottom: 25px; position: relative; z-index: 1; }
+        .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); margin: 20px 0; }
+        
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; position: relative; z-index: 1; }
+        .info-item { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 12px; }
+        .info-label { font-size: 0.75em; color: rgba(255,255,255,0.5); margin-bottom: 5px; }
+        .info-value { font-size: 0.95em; font-weight: 600; }
+        
+        .certificate-id { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 15px; margin-top: 20px; position: relative; z-index: 1; }
+        .cert-id-label { font-size: 0.75em; color: rgba(255,255,255,0.5); margin-bottom: 5px; }
+        .cert-id-value { font-family: 'Monaco', 'Consolas', monospace; font-size: 0.9em; color: #4facfe; word-break: break-all; }
+        
+        .actions { display: flex; gap: 10px; margin-top: 25px; justify-content: center; flex-wrap: wrap; }
+        .btn { padding: 12px 24px; border-radius: 12px; border: none; font-size: 0.9em; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-block; }
+        .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .btn-secondary { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
+        
+        .verify-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(76,175,80,0.2); color: #4CAF50; padding: 8px 16px; border-radius: 20px; font-size: 0.85em; margin-top: 20px; position: relative; z-index: 1; }
+        .obtained-date { color: rgba(255,255,255,0.5); font-size: 0.8em; margin-top: 15px; position: relative; z-index: 1; }
+        
+        @media (max-width: 500px) { .info-grid { grid-template-columns: 1fr; } .certificate-card { padding: 20px; } .costume-icon { font-size: 4em; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🦞</div>
+            <h1>装扮凭证</h1>
+        </div>
+        <div class="certificate-card" id="certificateCard">
+            <div class="loading" style="padding: 40px; color: rgba(255,255,255,0.6);">加载中...</div>
+        </div>
+        <div class="actions">
+            <a href="index.html" class="btn btn-primary">返回主页</a>
+            <a href="profile.html" class="btn btn-secondary">查看档案</a>
+        </div>
+    </div>
+    <script>
+        const API_BASE = 'https://lobster-box-backend.onrender.com';
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return { userId: params.get('userId'), costumeId: params.get('costumeId') };
+        }
+        function getRarityName(rarity) {
+            const map = { 'LEGENDARY': '传说', 'EPIC': '史诗', 'RARE': '稀有', 'COMMON': '普通' };
+            return map[rarity] || rarity;
+        }
+        function getRarityEmoji(rarity) {
+            const map = { 'LEGENDARY': '👑', 'EPIC': '💎', 'RARE': '⭐', 'COMMON': '🦞' };
+            return map[rarity] || '🦞';
+        }
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('zh-CN') + ' ' + date.toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'});
+        }
+        async function loadCertificate() {
+            const { userId, costumeId } = getUrlParams();
+            if (!userId) {
+                document.getElementById('certificateCard').innerHTML = '<div style="padding: 40px; text-align: center;"><div style="font-size: 3em; margin-bottom: 15px;">❌</div><p>缺少参数：userId</p></div>';
+                return;
+            }
+            try {
+                const userRes = await fetch(API_BASE + '/api/agent/' + userId);
+                const userData = await userRes.json();
+                if (userData.code !== 0) throw new Error(userData.message);
+                const user = userData.data;
+                const costumesRes = await fetch(API_BASE + '/api/agent/' + userId + '/costumes');
+                const costumesData = await costumesRes.json();
+                let costume = null;
+                if (costumesData.code === 0 && costumesData.data && costumesData.data.length > 0) {
+                    if (costumeId) costume = costumesData.data.find(c => c.id == costumeId);
+                    if (!costume) costume = costumesData.data[0];
+                }
+                if (!costume) {
+                    document.getElementById('certificateCard').innerHTML = '<div style="padding: 40px; text-align: center;"><div style="font-size: 3em; margin-bottom: 15px;">🦞</div><p>暂无装扮凭证</p><p style="color: rgba(255,255,255,0.5); font-size: 0.85em; margin-top: 10px;">快去抽卡获取装扮吧！</p></div>';
+                    return;
+                }
+                const certId = 'LP-' + costume.id + '-' + userId + '-' + Date.parse(costume.obtainedAt || new Date()).toString(36).toUpperCase();
+                document.getElementById('certificateCard').innerHTML = '<div class="rarity-badge rarity-' + costume.rarity.toLowerCase() + '">' + getRarityName(costume.rarity) + '</div><div class="costume-icon">' + getRarityEmoji(costume.rarity) + '</div><div class="costume-name">' + costume.name + '</div><div class="costume-desc">' + (costume.description || 'Lobster Pass 认证装扮') + '</div><div class="divider"></div><div class="info-grid"><div class="info-item"><div class="info-label">持有者</div><div class="info-value">' + (user.name || user.agentId) + '</div></div><div class="info-item"><div class="info-label">Lobster ID</div><div class="info-value">' + user.agentId + '</div></div><div class="info-item"><div class="info-label">魅力值</div><div class="info-value">' + (costume.charmValue || 0) + '</div></div><div class="info-item"><div class="info-label">稀有度</div><div class="info-value">' + getRarityName(costume.rarity) + '</div></div></div><div class="certificate-id"><div class="cert-id-label">凭证编号</div><div class="cert-id-value">' + certId + '</div></div><div class="verify-badge">✓ Lobster Pass 官方认证</div><div class="obtained-date">获得时间：' + formatDate(costume.obtainedAt) + '</div>';
+                document.title = costume.name + ' - Lobster Pass 凭证';
+            } catch (error) {
+                console.error('加载失败:', error);
+                document.getElementById('certificateCard').innerHTML = '<div style="padding: 40px; text-align: center;"><div style="font-size: 3em; margin-bottom: 15px;">⚠️</div><p>加载失败</p><p style="color: rgba(255,255,255,0.5); font-size: 0.85em; margin-top: 10px;">' + error.message + '</p></div>';
+            }
+        }
+        loadCertificate();
+    </script>
+</body>
+</html>
+EOF
