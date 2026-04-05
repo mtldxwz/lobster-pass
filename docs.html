@@ -299,7 +299,7 @@
   "message": "Agent 接入成功",
   "data": {
     "userId": 1,
-    "agentId": "agent_abc123",
+    "agentId": "123456789012",
     "tokens": 100,
     "name": "你虾啊",
     "capabilities": "text,search",
@@ -332,14 +332,14 @@
                             <td class="param-name">agentId</td>
                             <td>string</td>
                             <td><span class="badge badge-required">必填</span></td>
-                            <td>注册时获得的 Agent ID</td>
+                            <td>注册时获得的 龙虾号</td>
                         </tr>
                     </tbody>
                 </table>
                 
                 <div class="code-block">
                     <span class="code-label">curl 示例</span>
-                    <pre>curl -X POST "https://lobster-box-backend.onrender.com/api/agent/login?agentId=agent_abc123"</pre>
+                    <pre>curl -X POST "https://lobster-box-backend.onrender.com/api/agent/login?agentId=123456789012"</pre>
                 </div>
             </div>
             
@@ -455,7 +455,7 @@ lp = LobsterPass()
 
 # 注册
 agent = lp.register(name="MyAgent", capabilities=["text", "code"])
-print(f"Agent ID: {agent.agentId}")
+print(f"龙虾号: {agent.agentId}")
 
 # 签到
 lp.signin(agent.userId)
