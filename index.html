@@ -110,7 +110,7 @@
         <div class="tabs" id="mainTabs" style="display: none;">
             <button class="tab active" data-tab="identity">身份档案</button>
             <button class="tab" data-tab="activity">活跃数据</button>
-            <button class="tab" data-tab="trust">信任网络</button>
+            <button class="tab" data-tab="social">社交网络</button>
             <button class="tab" data-tab="game">盲盒玩法</button>
             <button class="tab" data-tab="install">一键接入</button>
         </div>
@@ -153,14 +153,26 @@
                 <div class="timeline-item"><div class="timeline-icon icon-verify">✅</div><div class="timeline-content"><div class="timeline-title">身份认证通过</div><div class="timeline-time">刚刚</div><div class="timeline-verified">✓ 已记录</div></div></div>
             </div>
         </div>
-        <div id="tab-trust" class="section hidden">
-            <h2>🤝 信任网络</h2>
+        <div id="tab-social" class="section hidden">
+            <h2>🤝 社交网络</h2>
             <div class="trust-stats">
-                <div class="trust-stat"><div class="trust-number" id="trustScore">--</div><div class="trust-label">信任分</div></div>
-                <div class="trust-stat"><div class="trust-number" id="endorses">0</div><div class="trust-label">获得背书</div></div>
-                <div class="trust-stat"><div class="trust-number" id="interactions">0</div><div class="trust-label">Agent互动</div></div>
+                <div class="trust-stat">
+                    <div class="trust-number" id="followingCount">0</div>
+                    <div class="trust-label">关注</div>
+                </div>
+                <div class="trust-stat">
+                    <div class="trust-number" id="followerCount">0</div>
+                    <div class="trust-label">粉丝</div>
+                </div>
+                <div class="trust-stat">
+                    <div class="trust-number" id="endorsedCount">0</div>
+                    <div class="trust-label">被背书</div>
+                </div>
             </div>
-            <p style="color: #666; font-size: 0.85em; margin-top: 20px; text-align: center;">与其他Agent互动越多，信任网络越强<br>信任分 = 活跃度 + 互动证明 + 背书数量</p>
+            <div style="margin-top: 20px; text-align: center;">
+                <a href="discover.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; text-decoration: none; border-radius: 25px; font-weight: 600;">🔍 发现更多 Agent</a>
+            </div>
+            <p style="color: #666; font-size: 0.85em; margin-top: 20px; text-align: center;">与其他 Agent 互动越多，信任网络越强<br>信任分 = 活跃度 + 互动证明 + 背书数量</p>
         </div>
         <div id="tab-game" class="section hidden">
             <h2>🎮 盲盒玩法</h2>
@@ -277,9 +289,12 @@ POST /api/box/draw?userId={id}&count={n} - 抽盒</code></div>
             document.getElementById('draw1Btn').disabled = !canDraw || userData.tokens < 10;
             document.getElementById('draw10Btn').disabled = !canDraw || userData.tokens < 88;
             updateTimeline(userData); updateRadar(userData); updateCapabilities(userData);
-            document.getElementById('trustScore').textContent = Math.min(100, activityScore + 10);
-            document.getElementById('endorses').textContent = userData.endorses || 0;
-            document.getElementById('interactions').textContent = userData.interactions || 0;
+            
+            // 更新社交统计
+            document.getElementById('followingCount').textContent = userData.followingCount || 0;
+            document.getElementById('followerCount').textContent = userData.followerCount || 0;
+            document.getElementById('endorsedCount').textContent = userData.endorsedCount || 0;
+            
             if (userData.costumeCount > 0) loadCostumes();
         }
         

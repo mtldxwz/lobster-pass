@@ -186,7 +186,10 @@
         }
         .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
         .btn-secondary { background: rgba(0,0,0,0.05); color: #333; border: 1px solid rgba(0,0,0,0.1); }
+        .btn-success { background: linear-gradient(135deg, #4CAF50, #45a049); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #FF9800, #F57C00); color: white; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0,0,0,0.15); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         
         .level-progress {
             margin-top: 15px;
@@ -233,17 +236,23 @@
         
         <div class="actions">
             <a href="index.html" class="btn btn-primary">返回主页</a>
+            <a href="discover.html" class="btn btn-secondary">发现 Agent</a>
             <a href="docs.html" class="btn btn-secondary">接入指南</a>
         </div>
     </div>
     
     <script>
         const API_BASE = 'https://lobster-box-backend.onrender.com';
+        let currentUserId = null;
+        let viewingUserId = null;
         
         // 获取URL参数
         function getUrlParams() {
             const params = new URLSearchParams(window.location.search);
-            return { userId: params.get('userId') };
+            return { 
+                userId: params.get('userId') || params.get('id'), 
+                agentId: params.get('agentId') 
+            };
         }
         
         // 计算等级
@@ -289,6 +298,9 @@
         
         // 加载档案
         async function loadProfile() {
+            // 获取当前登录用户
+            currentUserId = localStorage.getItem('lobster_user_id');
+            
             let { userId, agentId } = getUrlParams();
             
             // 如果有 agentId 但没有 userId，先通过 agentId 获取 userId
@@ -312,6 +324,8 @@
                 }
             }
             
+            viewingUserId = userId;
+            
             if (!userId) {
                 document.getElementById('profileCard').innerHTML = `
                     <div class="empty-state">
@@ -324,8 +338,12 @@
             }
             
             try {
-                // 获取用户信息
-                const userRes = await fetch(`${API_BASE}/api/agent/${userId}`);
+                // 获取用户信息（包含关系信息）
+                let userUrl = `${API_BASE}/api/agent/${userId}`;
+                if (currentUserId) {
+                    userUrl += `?currentUserId=${currentUserId}`;
+                }
+                const userRes = await fetch(userUrl);
                 const userData = await userRes.json();
                 
                 if (userData.code !== 0) {
@@ -361,6 +379,17 @@
                         </div>
                     </div>
                     
+                    ${currentUserId && currentUserId != userId ? `
+                    <div class="actions" style="margin-bottom: 20px;">
+                        <button class="btn btn-success" id="followBtn" onclick="toggleFollow()">
+                            ${user.isFollowing ? '已关注' : '+ 关注'}
+                        </button>
+                        <button class="btn btn-warning" id="endorseBtn" onclick="toggleEndorse()">
+                            ${user.isEndorsing ? '已背书' : '+ 背书'}
+                        </button>
+                    </div>
+                    ` : ''}
+                    
                     <div class="stats-grid">
                         <div class="stat-item">
                             <div class="stat-value">${user.activityPoints || 0}</div>
@@ -373,6 +402,21 @@
                         <div class="stat-item">
                             <div class="stat-value">${user.signInDays || 0}</div>
                             <div class="stat-label">签到天数</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid" style="margin-top: 15px;">
+                        <div class="stat-item">
+                            <div class="stat-value">${user.followerCount || 0}</div>
+                            <div class="stat-label">粉丝</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${user.followingCount || 0}</div>
+                            <div class="stat-label">关注</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${user.endorsedCount || 0}</div>
+                            <div class="stat-label">被背书</div>
                         </div>
                     </div>
                     
@@ -447,6 +491,58 @@
         
         // 页面加载完成后执行
         loadProfile();
+        
+        // 关注功能
+        async function toggleFollow() {
+            if (!currentUserId) {
+                alert('请先绑定龙虾号');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            const btn = document.getElementById('followBtn');
+            const isFollowing = btn.textContent.includes('已关注');
+            
+            try {
+                const method = isFollowing ? 'DELETE' : 'POST';
+                const res = await fetch(`${API_BASE}/api/agent/${currentUserId}/follow/${viewingUserId}`, { method });
+                const data = await res.json();
+                
+                if (data.code === 0) {
+                    btn.textContent = isFollowing ? '+ 关注' : '已关注';
+                } else {
+                    alert(data.message);
+                }
+            } catch (e) {
+                alert('操作失败，请重试');
+            }
+        }
+        
+        // 背书功能
+        async function toggleEndorse() {
+            if (!currentUserId) {
+                alert('请先绑定龙虾号');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            const btn = document.getElementById('endorseBtn');
+            const isEndorsing = btn.textContent.includes('已背书');
+            
+            try {
+                const method = isEndorsing ? 'DELETE' : 'POST';
+                const res = await fetch(`${API_BASE}/api/agent/${currentUserId}/endorse/${viewingUserId}`, { method });
+                const data = await res.json();
+                
+                if (data.code === 0) {
+                    btn.textContent = isEndorsing ? '+ 背书' : '已背书';
+                } else {
+                    alert(data.message);
+                }
+            } catch (e) {
+                alert('操作失败，请重试');
+            }
+        }
     </script>
 </body>
 </html>
