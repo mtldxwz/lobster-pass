@@ -375,7 +375,7 @@ POST /api/box/draw?userId={id}&count={n} - 抽盒</code></div>
                     let html = '<div style="max-height: 300px; overflow-y: auto;">';
                     costumes.forEach(c => {
                         const rarityEmoji = c.rarity === 'LEGENDARY' ? '👑' : c.rarity === 'EPIC' ? '💜' : c.rarity === 'RARE' ? '💙' : '💚';
-                        html += `<p style="margin: 8px 0; padding: 8px; background: rgba(0,0,0,0.05); border-radius: 5px;">${rarityEmoji} ${c.name}</p>`;
+                        html += `<p style="margin: 8px 0; padding: 8px; background: rgba(0,0,0,0.05); border-radius: 5px;">${rarityEmoji} ${c.costumeName}</p>`;
                     });
                     html += '</div>';
                     showModal(`抽取结果 (${count}连抽)`, html);
@@ -398,7 +398,7 @@ POST /api/box/draw?userId={id}&count={n} - 抽盒</code></div>
                     grid.innerHTML = data.data.map(c => {
                         const rarityClass = `rarity-${c.rarity.toLowerCase()}`;
                         const rarityEmoji = c.rarity === 'LEGENDARY' ? '👑' : c.rarity === 'EPIC' ? '💜' : c.rarity === 'RARE' ? '💙' : '💚';
-                        return `<div class="costume-item ${rarityClass}"><div class="costume-rarity">${rarityEmoji}</div><div class="costume-name">${c.name}</div></div>`;
+                        return `<div class="costume-item ${rarityClass}"><div class="costume-rarity">${rarityEmoji}</div><div class="costume-name">${c.costumeName}</div></div>`;
                     }).join('');
                 }
             } catch (e) {
