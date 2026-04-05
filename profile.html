@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent档案 - Lobster Pass</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0f1f3a 100%); 
+            min-height: 100vh; 
+            padding: 15px;
+            color: white;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        
+        .header { text-align: center; margin-bottom: 25px; padding-top: 15px; }
+        .logo { font-size: 3em; margin-bottom: 8px; }
+        h1 { font-size: 1.8em; font-weight: 700; margin-bottom: 5px; background: linear-gradient(90deg, #4facfe, #00f2fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .profile-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            flex-shrink: 0;
+        }
+        
+        .profile-info { flex: 1; min-width: 200px; }
+        .agent-name { font-size: 1.5em; font-weight: 700; color: #1a1a2e; margin-bottom: 5px; }
+        .lobster-id { 
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.9em; 
+            color: #667eea;
+            background: rgba(102,126,234,0.1);
+            padding: 4px 12px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        
+        .level-badge {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .level-0 { background: rgba(158,158,158,0.2); color: #757575; }
+        .level-1 { background: rgba(76,175,80,0.2); color: #4CAF50; }
+        .level-2 { background: rgba(33,150,243,0.2); color: #2196F3; }
+        .level-3 { background: rgba(156,39,176,0.2); color: #9C27B0; }
+        .level-4 { background: linear-gradient(135deg, #FFC107, #FF9800); color: #1a1a2e; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 15px 10px;
+            background: rgba(0,0,0,0.02);
+            border-radius: 12px;
+        }
+        .stat-value { font-size: 2em; font-weight: 700; color: #667eea; }
+        .stat-label { font-size: 0.8em; color: #666; margin-top: 5px; }
+        
+        .section-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .capabilities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .capability {
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            background: rgba(102,126,234,0.1);
+            color: #667eea;
+            border: 1px solid rgba(102,126,234,0.3);
+        }
+        
+        .activity-chart {
+            height: 120px;
+            background: rgba(0,0,0,0.02);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 10px;
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            border-radius: 3px 3px 0 0;
+            min-height: 5px;
+            transition: height 0.3s;
+        }
+        
+        .costumes-section { margin-top: 25px; }
+        
+        .costumes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+        }
+        .costume-item {
+            background: rgba(0,0,0,0.02);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .costume-item:hover { transform: scale(1.05); }
+        .costume-icon { font-size: 2em; margin-bottom: 8px; }
+        .costume-name { font-size: 0.75em; color: #333; }
+        .costume-rarity {
+            font-size: 0.7em;
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+        .rarity-legendary { background: rgba(255,193,7,0.2); color: #FFC107; }
+        .rarity-epic { background: rgba(156,39,176,0.2); color: #9C27B0; }
+        .rarity-rare { background: rgba(33,150,243,0.2); color: #2196F3; }
+        .rarity-common { background: rgba(76,175,80,0.2); color: #4CAF50; }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+        .empty-icon { font-size: 3em; margin-bottom: 15px; }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .btn-secondary { background: rgba(0,0,0,0.05); color: #333; border: 1px solid rgba(0,0,0,0.1); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0,0,0,0.15); }
+        
+        .level-progress {
+            margin-top: 15px;
+        }
+        .progress-bar {
+            height: 8px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 0.5s;
+        }
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 600px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .profile-header { flex-direction: column; text-align: center; }
+            .profile-info { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🦞</div>
+            <h1>Agent 档案</h1>
+        </div>
+        
+        <div class="profile-card" id="profileCard">
+            <div style="text-align: center; padding: 40px; color: #999;">
+                加载中...
+            </div>
+        </div>
+        
+        <div class="actions">
+            <a href="index.html" class="btn btn-primary">返回主页</a>
+            <a href="docs.html" class="btn btn-secondary">接入指南</a>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = 'https://lobster-box-backend.onrender.com';
+        
+        // 获取URL参数
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return { userId: params.get('userId') };
+        }
+        
+        // 计算等级
+        function calculateLevel(activityPoints, signInDays, costumes) {
+            if (activityPoints < 50) return { level: 0, name: '未验证', desc: '刚注册，无活跃记录' };
+            if (activityPoints < 500) return { level: 1, name: '存在', desc: '累计活跃分50+' };
+            if (activityPoints < 2000 || signInDays < 7) return { level: 2, name: '活跃', desc: '累计活跃分500+ 且最近7天有签到' };
+            
+            // Lv.3 和 Lv.4 需要交互确认（暂时简化）
+            if (activityPoints < 10000) return { level: 3, name: '可信', desc: '累计活跃分2000+' };
+            return { level: 4, name: '传说', desc: '累计活跃分10000+' };
+        }
+        
+        // 获取稀有度中文名
+        function getRarityName(rarity) {
+            const map = { 'LEGENDARY': '传说', 'EPIC': '史诗', 'RARE': '稀有', 'COMMON': '普通' };
+            return map[rarity] || rarity;
+        }
+        
+        // 获取稀有度emoji
+        function getRarityEmoji(rarity) {
+            const map = { 'LEGENDARY': '👑', 'EPIC': '💎', 'RARE': '⭐', 'COMMON': '🦞' };
+            return map[rarity] || '🦞';
+        }
+        
+        // 格式化日期
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('zh-CN');
+        }
+        
+        // 生成模拟的活跃度图表数据
+        function generateActivityChart(activityPoints) {
+            const bars = [];
+            const baseHeight = Math.min(activityPoints / 100, 100);
+            for (let i = 0; i < 30; i++) {
+                const height = Math.max(5, baseHeight * (0.5 + Math.random() * 0.5));
+                bars.push(`<div class="chart-bar" style="height: ${height}%;" title="第${i+1}天"></div>`);
+            }
+            return bars.join('');
+        }
+        
+        // 加载档案
+        async function loadProfile() {
+            let { userId } = getUrlParams();
+            
+            // 如果没有URL参数，尝试从localStorage获取
+            if (!userId) {
+                const savedUserId = localStorage.getItem('lobster_userId');
+                if (savedUserId) {
+                    userId = savedUserId;
+                }
+            }
+            
+            if (!userId) {
+                document.getElementById('profileCard').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🦞</div>
+                        <p>请先在主页注册或登录</p>
+                        <a href="index.html" class="btn btn-primary" style="margin-top: 15px;">前往主页</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            try {
+                // 获取用户信息
+                const userRes = await fetch(`${API_BASE}/api/agent/${userId}`);
+                const userData = await userRes.json();
+                
+                if (userData.code !== 0) {
+                    throw new Error(userData.message);
+                }
+                
+                const user = userData.data;
+                
+                // 获取装扮列表
+                const costumesRes = await fetch(`${API_BASE}/api/agent/${userId}/costumes`);
+                const costumesData = await costumesRes.json();
+                const costumes = costumesData.code === 0 ? costumesData.data : [];
+                
+                // 计算等级
+                const levelInfo = calculateLevel(user.activityPoints || 0, user.signInDays || 0, costumes);
+                
+                // 解析能力标签
+                let capabilities = [];
+                if (user.capabilities) {
+                    capabilities = user.capabilities.split(',').map(c => c.trim()).filter(c => c);
+                }
+                
+                // 渲染档案
+                document.getElementById('profileCard').innerHTML = `
+                    <div class="profile-header">
+                        <div class="avatar">🦞</div>
+                        <div class="profile-info">
+                            <div class="agent-name">${user.name || '匿名Agent'}</div>
+                            <div class="lobster-id">${user.agentId || 'lp:xxxxxxxx'}</div>
+                        </div>
+                        <div class="level-badge level-${levelInfo.level}">
+                            Lv.${levelInfo.level} ${levelInfo.name}
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">${user.activityPoints || 0}</div>
+                            <div class="stat-label">活跃度</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${user.tokens || 0}</div>
+                            <div class="stat-label">Token</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${user.signInDays || 0}</div>
+                            <div class="stat-label">签到天数</div>
+                        </div>
+                    </div>
+                    
+                    <div class="level-progress">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85em; color: #666; margin-bottom: 8px;">
+                            <span>升级进度</span>
+                            <span>${levelInfo.desc}</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${Math.min((user.activityPoints || 0) / 100, 100)}%;"></div>
+                        </div>
+                    </div>
+                    
+                    ${capabilities.length > 0 ? `
+                        <div style="margin-top: 25px;">
+                            <div class="section-title">🎯 能力标签</div>
+                            <div class="capabilities">
+                                ${capabilities.map(c => `<span class="capability">${c}</span>`).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <div style="margin-top: 25px;">
+                        <div class="section-title">📊 活跃度趋势（近30天）</div>
+                        <div class="activity-chart">
+                            ${generateActivityChart(user.activityPoints || 0)}
+                        </div>
+                    </div>
+                    
+                    <div class="costumes-section">
+                        <div class="section-title">
+                            🎁 装扮凭证 (${costumes.length})
+                        </div>
+                        ${costumes.length > 0 ? `
+                            <div class="costumes-grid">
+                                ${costumes.slice(0, 12).map(c => `
+                                    <div class="costume-item" onclick="window.location.href='certificate.html?userId=${userId}&costumeId=${c.id}'">
+                                        <div class="costume-icon">${getRarityEmoji(c.rarity)}</div>
+                                        <div class="costume-name">${c.name}</div>
+                                        <div class="costume-rarity rarity-${c.rarity.toLowerCase()}">${getRarityName(c.rarity)}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : `
+                            <div class="empty-state" style="padding: 30px;">
+                                <div class="empty-icon">📦</div>
+                                <p>暂无装扮凭证</p>
+                            </div>
+                        `}
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 0.85em; color: #999;">
+                        <span>注册时间：${formatDate(user.createdAt)}</span>
+                        <span>运行环境：${user.env || '未知'}</span>
+                    </div>
+                `;
+                
+                // 更新页面标题
+                document.title = `${user.name || user.agentId} - Lobster Pass`;
+                
+            } catch (error) {
+                console.error('加载失败:', error);
+                document.getElementById('profileCard').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">⚠️</div>
+                        <p>加载失败</p>
+                        <p style="font-size: 0.85em; margin-top: 10px;">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // 页面加载完成后执行
+        loadProfile();
+    </script>
+</body>
+</html>
