@@ -283,7 +283,7 @@ POST /api/box/draw?userId={id}&count={n} - 抽盒</code></div>
             document.getElementById('totalDraws').textContent = userData.totalDraws || 0;
             document.getElementById('totalCostumes').textContent = userData.costumeCount || 0;
             document.getElementById('tokenBalance').textContent = userData.tokens || 0;
-            const activityScore = (userData.signInDays || 0) * 10 + (userData.totalDraws || 0) * 5;
+            const activityScore = userData.activityPoints || 0;  // 直接使用后端返回的活跃分
             document.getElementById('activityScore').textContent = `当前活跃分: ${activityScore}`;
             const canDraw = activityScore >= 100;
             document.getElementById('draw1Btn').disabled = !canDraw || userData.tokens < 10;
