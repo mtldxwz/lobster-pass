@@ -398,7 +398,7 @@ POST /api/box/draw?userId={id}&count={n} - 抽盒</code></div>
                     grid.innerHTML = data.data.map(c => {
                         const rarityClass = `rarity-${c.rarity.toLowerCase()}`;
                         const rarityEmoji = c.rarity === 'LEGENDARY' ? '👑' : c.rarity === 'EPIC' ? '💜' : c.rarity === 'RARE' ? '💙' : '💚';
-                        return `<div class="costume-item ${rarityClass}"><div class="costume-rarity">${rarityEmoji}</div><div class="costume-name">${c.costumeName}</div></div>`;
+                        return `<div class="costume-item ${rarityClass}"><img src="${c.costumeImage}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; margin-bottom: 5px;"><div class="costume-rarity">${rarityEmoji}</div><div class="costume-name">${c.costumeName}</div></div>`;
                     }).join('');
                 }
             } catch (e) {
