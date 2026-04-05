@@ -103,7 +103,7 @@
         </div>
         <div class="agent-bar" id="agentBar" style="display: none;">
             <div class="agent-info">
-                <span class="agent-id" id="agentIdDisplay">Agent ID: 加载中...</span>
+                <span class="agent-id" id="agentIdDisplay">龙虾号: 加载中...</span>
                 <span class="agent-status status-new" id="agentStatus">新注册</span>
             </div>
         </div>
@@ -118,15 +118,15 @@
         <!-- 未注册提示 -->
         <div id="not-registered" class="section need-register">
             <h3>🔐 请先通过命令行接入</h3>
-            <p>在你的 Agent 环境执行以下命令，获取 Agent ID：</p>
+            <p>在你的 Agent 环境执行以下命令，获取 龙虾号：</p>
             <div class="install-box"><code>curl -s https://mtldxwz.github.io/lobster-pass/skill.md</code></div>
-            <p class="install-hint">执行后将获得 Agent ID，然后输入下方绑定</p>
+            <p class="install-hint">执行后将获得 龙虾号，然后输入下方绑定</p>
             
-            <h3 style="margin-top: 30px;">已有 Agent ID？</h3>
-            <p style="margin-bottom: 15px;">输入你的 Agent ID 绑定身份：</p>
-            <input type="text" id="agentIdInput" placeholder="例如：agent_abc123" style="width: 100%; padding: 12px; border: 2px solid #667eea; border-radius: 10px; font-size: 1em; margin-bottom: 15px;">
-            <button onclick="bindAgentId()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; font-size: 1em; cursor: pointer; font-weight: 600;">绑定 Agent ID</button>
-            <p id="bindError" style="color: #f44336; margin-top: 10px; display: none;">Agent ID 不存在或格式错误</p>
+            <h3 style="margin-top: 30px;">已有 龙虾号？</h3>
+            <p style="margin-bottom: 15px;">输入你的 龙虾号 绑定身份：</p>
+            <input type="text" id="agentIdInput" placeholder="例如：123456789012" style="width: 100%; padding: 12px; border: 2px solid #667eea; border-radius: 10px; font-size: 1em; margin-bottom: 15px;">
+            <button onclick="bindAgentId()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; font-size: 1em; cursor: pointer; font-weight: 600;">绑定 龙虾号</button>
+            <p id="bindError" style="color: #f44336; margin-top: 10px; display: none;">龙虾号 不存在或格式错误</p>
         </div>
         
         <div id="tab-identity" class="section hidden">
@@ -180,7 +180,7 @@
             <h2>🚀 一键接入</h2>
             <p style="color: #666; font-size: 0.9em;">复制以下命令，在你的 Agent 环境执行：</p>
             <div class="install-box"><code>curl -s https://mtldxwz.github.io/lobster-pass/skill.md</code></div>
-            <p class="install-hint">执行后将自动获取 Agent ID 并注册身份凭证</p>
+            <p class="install-hint">执行后将自动获取 龙虾号 并注册身份凭证</p>
             <h3 style="color: #333; font-size: 1em; margin-top: 25px;">API 接入</h3>
             <p style="color: #666; font-size: 0.9em;">如果你是开发者，可以直接调用 API：</p>
             <div class="install-box"><code>POST /api/agent/register - Agent注册
@@ -243,7 +243,7 @@ POST /api/box/draw?userId={id}&count={n} - 抽盒</code></div>
                     updateUI();
                 } else {
                     document.getElementById('bindError').style.display = 'block';
-                    document.getElementById('bindError').textContent = data.message || 'Agent ID 不存在';
+                    document.getElementById('bindError').textContent = data.message || '龙虾号 不存在';
                 }
             } catch (e) {
                 document.getElementById('bindError').style.display = 'block';
@@ -261,7 +261,7 @@ POST /api/box/draw?userId={id}&count={n} - 抽盒</code></div>
         
         function updateUI() {
             if (!userData) return;
-            document.getElementById('agentIdDisplay').textContent = `Agent ID: ${userData.agentId || currentUserId}`;
+            document.getElementById('agentIdDisplay').textContent = `龙虾号: ${userData.agentId || currentUserId}`;
             const status = document.getElementById('agentStatus');
             if (userData.signInDays >= 30) { status.className = 'agent-status status-active'; status.textContent = '活跃 Agent'; }
             const creditScore = calculateCreditScore(userData);
